@@ -1,0 +1,109 @@
+[gd_scene load_steps=2 format=3 uid="uid://fes1ep4xt1q8"]
+
+[ext_resource type="Script" uid="uid://bu4vrgbgutdi1" path="res://scripts/lobby.gd" id="1_o1atq"]
+
+[node name="Lobby" type="VBoxContainer" node_paths=PackedStringArray("player_name", "enet_host", "enet_join", "enet_ip_address", "enet_start", "enet_player_list", "error_dialog")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o1atq")
+player_name = NodePath("PlayerName")
+enet_host = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Host")
+enet_join = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Join")
+enet_ip_address = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/IPAddress")
+enet_start = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Start")
+enet_player_list = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/PlayerList/List")
+error_dialog = NodePath("ErrorDialog")
+
+[node name="PlayerNameLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Player Name:"
+
+[node name="PlayerName" type="LineEdit" parent="."]
+layout_mode = 2
+text = "PlayerName"
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="ENet" type="Control" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Players" type="PanelContainer" parent="TabContainer/ENet"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/ENet/Players"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/ENet/Players/MarginContainer"]
+layout_mode = 2
+
+[node name="Settings" type="VBoxContainer" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+text = "ENet Connection"
+
+[node name="Host" type="Button" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+text = "Join"
+
+[node name="IPAddress" type="LineEdit" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+placeholder_text = "Enter IP Address to Join"
+
+[node name="Start" type="Button" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+disabled = true
+text = "Start"
+
+[node name="PlayerList" type="VBoxContainer" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/PlayerList"]
+layout_mode = 2
+text = "Players:"
+
+[node name="List" type="ItemList" parent="TabContainer/ENet/Players/MarginContainer/HBoxContainer/PlayerList"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Steam" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+
+[connection signal="pressed" from="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Host" to="." method="_on_enet_host_pressed"]
+[connection signal="pressed" from="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Join" to="." method="_on_enet_join_pressed"]
+[connection signal="pressed" from="TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Start" to="." method="_on_enet_start_pressed"]
