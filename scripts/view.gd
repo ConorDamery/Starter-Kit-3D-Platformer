@@ -23,6 +23,8 @@ func _ready():
 	pass
 
 func _physics_process(delta):
+	if not target:
+		return
 	
 	# Set position and rotation to targets
 	

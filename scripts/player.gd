@@ -25,19 +25,40 @@ var coins = 0
 @onready var model = $Character
 @onready var animation = $Character/AnimationPlayer
 
+# RPC Calls
+
+@rpc("authority", "call_local")
+func set_authority(id : int) -> void:
+	set_multiplayer_authority(id)
+
+@rpc("any_peer", "call_local")
+func teleport(new_position : Vector3) -> void:
+	self.position = new_position
+
+@rpc("any_peer", "call_local")
+func setup_view() -> void:
+	if not view and is_multiplayer_authority():
+		view = get_tree().get_root().get_node("Main").get_node("View")
+		view.target = self
+
 # Functions
 
-func _physics_process(delta):
+func _ready() -> void:
+	print("ready")
+	particles_trail.emitting = false
+	sound_footsteps.stream_paused = true
+
+func _physics_process(delta) -> void:
+	# Ensure only the owning peer of player is processed
+	if not is_multiplayer_authority():
+		return
 
 	# Handle functions
-
 	handle_controls(delta)
 	handle_gravity(delta)
-
 	handle_effects(delta)
 
 	# Movement
-
 	var applied_velocity: Vector3
 
 	applied_velocity = velocity.lerp(movement_velocity, delta * 10)
@@ -47,23 +68,19 @@ func _physics_process(delta):
 	move_and_slide()
 
 	# Rotation
-
 	if Vector2(velocity.z, velocity.x).length() > 0:
 		rotation_direction = Vector2(velocity.z, velocity.x).angle()
 
 	rotation.y = lerp_angle(rotation.y, rotation_direction, delta * 10)
 
 	# Falling/respawning
-
 	if position.y < -10:
-		get_tree().reload_current_scene()
+		teleport.rpc(Vector3(randf_range(-1, 1), 1, randf_range(-1, 1)))
 
 	# Animation for scale (jumping and landing)
-
 	model.scale = model.scale.lerp(Vector3(1, 1, 1), delta * 10)
 
 	# Animation when landing
-
 	if is_on_floor() and gravity > 2 and !previously_floored:
 		model.scale = Vector3(1.25, 0.75, 1.25)
 		Audio.play("res://sounds/land.ogg")
@@ -73,7 +90,6 @@ func _physics_process(delta):
 # Handle animation(s)
 
 func handle_effects(delta):
-
 	particles_trail.emitting = false
 	sound_footsteps.stream_paused = true
 
@@ -99,14 +115,11 @@ func handle_effects(delta):
 # Handle movement input
 
 func handle_controls(delta):
-
 	# Movement
-
 	var input := Vector3.ZERO
 
 	input.x = Input.get_axis("move_left", "move_right")
 	input.z = Input.get_axis("move_forward", "move_back")
-
 	input = input.rotated(Vector3.UP, view.rotation.y)
 
 	if input.length() > 1:
@@ -115,18 +128,14 @@ func handle_controls(delta):
 	movement_velocity = input * movement_speed * delta
 
 	# Jumping
-
 	if Input.is_action_just_pressed("jump"):
-
 		if jump_single or jump_double:
 			jump()
 
 # Handle gravity
 
 func handle_gravity(delta):
-
 	gravity += 25 * delta
-
 	if gravity > 0 and is_on_floor():
 
 		jump_single = true
@@ -135,11 +144,8 @@ func handle_gravity(delta):
 # Jumping
 
 func jump():
-
-	Audio.play("res://sounds/jump.ogg")
-
+	Audio.play.rpc("res://sounds/jump.ogg")
 	gravity = -jump_strength
-
 	model.scale = Vector3(0.5, 1.5, 0.5)
 
 	if jump_single:
@@ -151,7 +157,5 @@ func jump():
 # Collecting coins
 
 func collect_coin():
-
 	coins += 1
-
 	coin_collected.emit(coins)

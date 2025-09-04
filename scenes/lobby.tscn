@@ -2,18 +2,18 @@
 
 [ext_resource type="Script" uid="uid://bu4vrgbgutdi1" path="res://scripts/lobby.gd" id="1_o1atq"]
 
-[node name="Lobby" type="VBoxContainer" node_paths=PackedStringArray("player_name", "enet_host", "enet_join", "enet_ip_address", "enet_start", "enet_player_list", "error_dialog")]
+[node name="Lobby" type="VBoxContainer" node_paths=PackedStringArray("player_name_le", "enet_host_btn", "enet_join_btn", "enet_ip_address_le", "enet_start_btn", "enet_player_list", "error_dialog")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o1atq")
-player_name = NodePath("PlayerName")
-enet_host = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Host")
-enet_join = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Join")
-enet_ip_address = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/IPAddress")
-enet_start = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Start")
+player_name_le = NodePath("PlayerName")
+enet_host_btn = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Host")
+enet_join_btn = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Join")
+enet_ip_address_le = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/IPAddress")
+enet_start_btn = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/Settings/Start")
 enet_player_list = NodePath("TabContainer/ENet/Players/MarginContainer/HBoxContainer/PlayerList/List")
 error_dialog = NodePath("ErrorDialog")
 

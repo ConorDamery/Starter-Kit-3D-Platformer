@@ -1,11 +1,11 @@
 extends Control
 
-@export var player_name : LineEdit
+@export var player_name_le : LineEdit
 
-@export var enet_host : Button
-@export var enet_join : Button
-@export var enet_ip_address : LineEdit
-@export var enet_start : Button
+@export var enet_host_btn : Button
+@export var enet_join_btn : Button
+@export var enet_ip_address_le : LineEdit
+@export var enet_start_btn : Button
 @export var enet_player_list : ItemList
 
 @export var error_dialog : AcceptDialog
@@ -21,7 +21,7 @@ func _ready() -> void:
 	Online.game_log.connect(self._on_game_log)
 	
 func _on_connection_failed():
-	enet_host.disabled = false
+	enet_host_btn.disabled = false
 	# TODO: Let the user know!
 	print("Connection failed!")
 
@@ -31,8 +31,8 @@ func _on_connection_succeded():
 func _on_player_list_changed():
 	print("Player list changed!")
 	enet_player_list.clear()
-	for name in Online.players.values():
-		enet_player_list.add_item(name if name != Online.player_name else name + " (you)")
+	for player_name in Online.players.values():
+		enet_player_list.add_item(player_name if player_name != Online.player_name else player_name + " (you)")
 
 func _on_game_started():
 	print("Game started!")
@@ -43,19 +43,17 @@ func _on_game_ended():
 func _on_game_error(what: String):
 	error_dialog.dialog_text = what
 	error_dialog.popup_centered()
-	enet_host.disabled = false
+	enet_host_btn.disabled = false
 
 func _on_game_log(what: String):
 	print("GAME LOG: " + what)
 
-
 func _on_enet_host_pressed() -> void:
-	Online.create_enet_host(player_name.text)
-
+	Online.create_enet_host(player_name_le.text)
+	enet_start_btn.disabled = false
 
 func _on_enet_join_pressed() -> void:
-	Online.create_enet_client(player_name.text, enet_ip_address.text)
-
+	Online.create_enet_client(player_name_le.text, enet_ip_address_le.text)
 
 func _on_enet_start_pressed() -> void:
-	print("ENet start")
+	Online.start_game()
