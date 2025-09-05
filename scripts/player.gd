@@ -38,7 +38,7 @@ func teleport(new_position : Vector3) -> void:
 @rpc("any_peer", "call_local")
 func setup_view() -> void:
 	if not view and is_multiplayer_authority():
-		view = get_tree().get_root().get_node("Main").get_node("View")
+		view = get_tree().get_root().get_node("Session").get_node("View")
 		view.target = self
 
 # Functions

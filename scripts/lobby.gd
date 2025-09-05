@@ -36,9 +36,11 @@ func _on_player_list_changed():
 
 func _on_game_started():
 	print("Game started!")
+	get_tree().get_root().get_node("Lobby").hide()
 
 func _on_game_ended():
 	print("Game ended!")
+	get_tree().get_root().get_node("Lobby").show()
 
 func _on_game_error(what: String):
 	error_dialog.dialog_text = what
