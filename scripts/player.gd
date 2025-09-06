@@ -2,12 +2,11 @@ extends CharacterBody3D
 
 signal coin_collected
 
-@export_subgroup("Components")
-@export var view: Node3D
-
 @export_subgroup("Properties")
 @export var movement_speed = 250
 @export var jump_strength = 7
+
+var view: Node3D
 
 var movement_velocity: Vector3
 var rotation_direction: float
@@ -37,14 +36,12 @@ func teleport(new_position : Vector3) -> void:
 
 @rpc("any_peer", "call_local")
 func setup_view() -> void:
-	if not view and is_multiplayer_authority():
-		view = get_tree().get_root().get_node("Session").get_node("View")
-		view.target = self
+	if is_multiplayer_authority():
+		view = Online.session.create_view(self)
 
 # Functions
 
 func _ready() -> void:
-	print("ready")
 	particles_trail.emitting = false
 	sound_footsteps.stream_paused = true
 
@@ -83,7 +80,7 @@ func _physics_process(delta) -> void:
 	# Animation when landing
 	if is_on_floor() and gravity > 2 and !previously_floored:
 		model.scale = Vector3(1.25, 0.75, 1.25)
-		Audio.play("res://sounds/land.ogg")
+		Audio.play.rpc("res://sounds/land.ogg")
 
 	previously_floored = is_on_floor()
 
@@ -115,6 +112,9 @@ func handle_effects(delta):
 # Handle movement input
 
 func handle_controls(delta):
+	if not view:
+		return
+	
 	# Movement
 	var input := Vector3.ZERO
 

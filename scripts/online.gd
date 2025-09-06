@@ -3,17 +3,13 @@ extends Node
 const DEFAULT_PORT = 10567
 const MAX_PEERS = 8
 
-var peer: MultiplayerPeer = null
+var session: Node3D
 
+var game_scene := "res://scenes/main.tscn"
 var player_name: String
 
 var players := {}
 var player_ready := {}
-
-var session_world: Node3D
-var current_world: Node3D
-var player_scene: Resource
-var spawned_players := {}
 
 signal connection_failed()
 signal connection_succeded()
@@ -24,7 +20,8 @@ signal game_error(what: String)
 signal game_log(what: String)
 
 func _ready() -> void:
-	player_scene = preload("res://objects/player.tscn")
+	session = load("res://scenes/session.tscn").instantiate()
+	get_tree().get_root().add_child.call_deferred(session)
 	
 	initialize_backend()
 	setup_callbacks()
@@ -36,7 +33,7 @@ func setup_callbacks() -> void:
 	
 	multiplayer.peer_connected.connect(
 		func(id: int):
-			print("Peer connected with ID: ", id, ", Our ID: ", multiplayer.get_unique_id())
+			print("Peer connected: ", id)
 			# Tell the connected peer that we have also joined
 			register_player.rpc_id(id, player_name)
 	)
@@ -53,7 +50,7 @@ func setup_callbacks() -> void:
 	
 	multiplayer.connection_failed.connect(
 		func():
-			close_enet()
+			close_connection()
 			connection_failed.emit()
 	)
 	
@@ -67,63 +64,20 @@ func _process(delta: float) -> void:
 	# Poll network events
 	return
 
-func is_game_in_progress():
-	return current_world != null
-
-func load_online_world():
-	session_world = load("res://scenes/session.tscn").instantiate()
-	get_tree().get_root().add_child(session_world)
-
-@rpc("any_peer", "call_local")
-func load_world(world_path: String):
-	assert(session_world)
-	
-	# Change scene.
-	current_world = load(world_path).instantiate()
-	session_world.add_child(current_world)
-	
-	game_started.emit()
-	get_tree().set_pause(false) # Unpause and unleash the game!
-
-func spawn_player(id: int):
-	assert(multiplayer.is_server())
-	
-	print("Spawning player peer ID: ", id)
-	
-	# Instantiate player and add it to our bookkeeping list
-	var player : CharacterBody3D = player_scene.instantiate()
-	spawned_players[id] = player
-	
-	# "true" forces a readable name, which is important, as we can't have sibling nodes
-	# with the same name.
-	session_world.get_node("Players").add_child(player, true)
-	
-	# Set the authorization for the player. This has to be called on all peers to stay in sync.
-	player.set_authority.rpc(id)
-	
-	# The peer has authority over the player's position, so to sync it properly,
-	# we need to set that position from that peer with an RPC.
-	player.teleport.rpc_id(id, Vector3(randf_range(-1, 1), 1, randf_range(-1, 1)))
-	
-	# Last make sure we have a camera that knows about this player
-	player.setup_view.rpc_id(id)
-
 func start_game():
 	assert(multiplayer.is_server())
 	
 	# Call load_world on all clients
-	load_world.rpc("res://scenes/main.tscn")
+	session.load_world.rpc(game_scene)
 	
-	#Iterate over our connected peer ids
+	# Iterate over our connected peer ids
 	for peer_id in players:
-		spawn_player(peer_id)
+		session.spawn_player(peer_id)
 
 func end_game():
-	close_enet()
+	close_connection()
 	
-	session_world.queue_free()
-	session_world = null
-	current_world = null
+	session.reset()
 	
 	players.clear()
 	player_list_changed.emit()
@@ -134,21 +88,24 @@ func end_game():
 func register_player(new_player_name: String):
 	var id = multiplayer.get_remote_sender_id()
 	var unique_name = _make_unique_name(new_player_name)
-	print("Register player: " + unique_name + ", ID: ", id)
 	players[id] = unique_name
 	player_list_changed.emit()
 	
-	if is_game_in_progress() and multiplayer.is_server():
-		print("Spawning player in game in progress")
-		load_world.rpc_id(id, "res://scenes/main.tscn")
-		spawn_player(id)
+	if session.is_game_in_progress() and multiplayer.is_server():
+		# Sync authority peer ids for newely joined player
+		for peer_id in session.spawned_players.keys():
+			var player = session.spawned_players[peer_id]
+			player.set_authority.rpc_id(id, peer_id)
+		
+		session.load_world.rpc_id(id, game_scene)
+		session.spawn_player(id)
 
 @rpc("call_local", "any_peer")
 func unregister_player(id):
-	if is_game_in_progress():
-		game_error.emit("Player " + players[id] + " disconnected!")
+	if session.is_game_in_progress():
+		#game_error.emit("Player " + players[id] + " disconnected!")
 		if multiplayer.is_server():
-			spawned_players[id].queue_free()
+			session.remove_player(id)
 	
 	players.erase(id)
 	player_list_changed.emit()
@@ -156,35 +113,27 @@ func unregister_player(id):
 # ENet functions
 
 func create_enet_host(new_player_name: String):
-	load_online_world()
+	var peer = ENetMultiplayerPeer.new()
+	peer.create_server(DEFAULT_PORT)
 	
-	var enet_peer = ENetMultiplayerPeer.new()
-	enet_peer.create_server(DEFAULT_PORT)
-	
-	peer = enet_peer
 	multiplayer.set_multiplayer_peer(peer)
 	
 	register_player.rpc_id(multiplayer.get_unique_id(), new_player_name)
 	player_name = players[multiplayer.get_unique_id()]
 
 func create_enet_client(new_player_name: String, ip_address):
-	load_online_world()
+	var peer = ENetMultiplayerPeer.new()
+	peer.create_client(ip_address, DEFAULT_PORT)
 	
-	var enet_peer = ENetMultiplayerPeer.new()
-	enet_peer.create_client(ip_address, DEFAULT_PORT)
-	
-	peer = enet_peer
 	multiplayer.set_multiplayer_peer(peer)
 	
 	await multiplayer.connected_to_server
 	register_player.rpc_id(multiplayer.get_unique_id(), new_player_name)
 	player_name = players[multiplayer.get_unique_id()]
 
-func close_enet():
-	if peer:
-		var enet_peer = (peer as ENetMultiplayerPeer)
-		enet_peer.close()
-		peer = null
+func close_connection():
+	if multiplayer.multiplayer_peer:
+		multiplayer.multiplayer_peer.close()
 	
 	multiplayer.multiplayer_peer = null
 

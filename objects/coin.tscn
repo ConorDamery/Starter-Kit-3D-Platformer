@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://dfpisimsgf5ce"]
+[gd_scene load_steps=14 format=4 uid="uid://dfpisimsgf5ce"]
 
 [ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://models/Textures/colormap.png" id="2_04qt4"]
 [ext_resource type="Script" uid="uid://bllf6owndebm1" path="res://objects/coin.gd" id="2_gaakh"]
@@ -68,6 +68,17 @@ point_count = 3
 [sub_resource type="Gradient" id="Gradient_7tsk2"]
 colors = PackedColorArray(0.996094, 0.910156, 0.351563, 1, 1, 1, 1, 1)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1o7s2"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="coin" type="Area3D"]
 script = ExtResource("2_gaakh")
 
@@ -95,5 +106,8 @@ scale_amount_min = 0.15
 scale_amount_max = 0.15
 scale_amount_curve = SubResource("Curve_6a7l3")
 color_ramp = SubResource("Gradient_7tsk2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_1o7s2")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

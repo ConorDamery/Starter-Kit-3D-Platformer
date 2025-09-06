@@ -17,17 +17,13 @@ var zoom = 10
 @onready var camera = $Camera
 
 func _ready():
-	
 	camera_rotation = rotation_degrees # Initial rotation
-	
-	pass
 
 func _physics_process(delta):
 	if not target:
 		return
 	
 	# Set position and rotation to targets
-	
 	self.position = self.position.lerp(target.position, delta * 4)
 	rotation_degrees = rotation_degrees.lerp(camera_rotation, delta * 6)
 	
@@ -40,7 +36,6 @@ func _physics_process(delta):
 func handle_input(delta):
 	
 	# Rotation
-	
 	var input := Vector3.ZERO
 	
 	input.y = Input.get_axis("camera_left", "camera_right")
@@ -50,6 +45,5 @@ func handle_input(delta):
 	camera_rotation.x = clamp(camera_rotation.x, -80, -10)
 	
 	# Zooming
-	
 	zoom += Input.get_axis("zoom_in", "zoom_out") * zoom_speed * delta
 	zoom = clamp(zoom, zoom_maximum, zoom_minimum)

@@ -4,6 +4,9 @@ var falling := false
 var gravity := 0.0
 
 func _process(delta):
+	if not is_multiplayer_authority():
+		return
+	
 	scale = scale.lerp(Vector3(1, 1, 1), delta * 10) # Animate scale
 	
 	position.y -= gravity * delta
@@ -16,8 +19,11 @@ func _process(delta):
 
 
 func _on_body_entered(_body):
+	if not is_multiplayer_authority():
+		return
+	
 	if !falling:
-		Audio.play("res://sounds/fall.ogg") # Play sound
+		Audio.play.rpc("res://sounds/fall.ogg") # Play sound
 		scale = Vector3(1.25, 1, 1.25) # Animate scale
 		
 	falling = true

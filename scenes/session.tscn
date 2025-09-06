@@ -1,8 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://baj8w0ra7h7mk"]
 
-[ext_resource type="Script" uid="uid://gnxh5cvs4tt3" path="res://scripts/view.gd" id="1_wfdo7"]
+[ext_resource type="Script" uid="uid://c6nfjx3wo71bb" path="res://scripts/session.gd" id="1_wfdo7"]
 
 [node name="Session" type="Node3D"]
+script = ExtResource("1_wfdo7")
+
+[node name="Views" type="Node3D" parent="."]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://dl2ed4gkybggf")
@@ -10,11 +13,8 @@ spawn_path = NodePath("../Players")
 
 [node name="Players" type="Node3D" parent="."]
 
-[node name="View" type="Node3D" parent="."]
-transform = Transform3D(0.707107, -0.298836, 0.640856, 0, 0.906308, 0.422618, -0.707107, -0.298836, 0.640856, 0, 0, 0)
-script = ExtResource("1_wfdo7")
+[node name="DynamicSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://dfpisimsgf5ce", "uid://c8up71en5djgm")
+spawn_path = NodePath("../Dynamic")
 
-[node name="Camera" type="Camera3D" parent="View"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
-current = true
-fov = 40.0
+[node name="Dynamic" type="Node3D" parent="."]
