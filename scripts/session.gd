@@ -74,5 +74,6 @@ func reset():
 		child.queue_free()
 	
 	spawned_players.clear()
-	world.queue_free()
+	
+	if world: world.queue_free()
 	world = null
