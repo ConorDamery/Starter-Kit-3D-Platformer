@@ -61,8 +61,7 @@ func _on_game_started():
 	get_tree().get_root().get_node("Lobby").hide()
 
 func _on_game_ended():
-	selected_lobby_index = -1
-	enet_join_btn.disabled = true
+	Online.request_lobbies()
 	
 	connect_panel.show()
 	players_panel.hide()
