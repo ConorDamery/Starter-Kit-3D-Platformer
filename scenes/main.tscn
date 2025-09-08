@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bqqgyqafm7xwp"]
+[gd_scene load_steps=14 format=3 uid="uid://bqqgyqafm7xwp"]
 
 [ext_resource type="Environment" uid="uid://bqnqgflivjvue" path="res://scenes/main-environment.tres" id="1_ahusb"]
 [ext_resource type="PackedScene" uid="uid://cnymdajj1vsqm" path="res://objects/platform.tscn" id="6_sdmev"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://uqr4hswv6d2g" path="res://objects/platform_grass_large_round.tscn" id="8_4oh1e"]
 [ext_resource type="PackedScene" uid="uid://c8up71en5djgm" path="res://objects/platform_falling.tscn" id="9_2fnpo"]
 [ext_resource type="PackedScene" uid="uid://dtjvjdjl8cs6e" path="res://models/flag.glb" id="9_fw1f5"]
+[ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="10_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://dfpisimsgf5ce" path="res://objects/coin.tscn" id="10_fwhys"]
 [ext_resource type="Script" uid="uid://cx4jgntsc1tg6" path="res://scripts/hud.gd" id="11_apvpm"]
 [ext_resource type="PackedScene" uid="uid://dy017k58p20sk" path="res://objects/cloud.tscn" id="13_drtpy"]
@@ -127,33 +128,53 @@ shadow_opacity = 0.75
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("11_apvpm")
 
-[node name="Icon" type="TextureRect" parent="HUD"]
-offset_left = 57.0
-offset_top = 67.0
-offset_right = 313.0
-offset_bottom = 323.0
-scale = Vector2(0.2, 0.2)
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 128.0
+grow_horizontal = 2
+theme = ExtResource("10_eb6dy")
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("10_eb6dy")
+theme_override_constants/separation = 15
+
+[node name="Icon" type="TextureRect" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("10_eb6dy")
 texture = ExtResource("13_jfda3")
 
-[node name="x" type="Label" parent="HUD"]
-offset_left = 112.0
-offset_top = 64.0
-offset_right = 144.0
-offset_bottom = 123.0
+[node name="x" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("10_eb6dy")
 text = "×"
 label_settings = SubResource("LabelSettings_38ys3")
 
-[node name="Coins" type="Label" parent="HUD"]
-offset_left = 144.0
-offset_top = 64.0
-offset_right = 368.0
-offset_bottom = 123.0
+[node name="Coins" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("10_eb6dy")
 text = "0"
 label_settings = SubResource("LabelSettings_38ys3")
 
-[node name="Button" type="Button" parent="HUD"]
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="Control" type="Control" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("10_eb6dy")
+
+[node name="Button" type="Button" parent="HUD/MarginContainer/HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme = ExtResource("10_eb6dy")
 text = "Quit"
 
-[connection signal="pressed" from="HUD/Button" to="HUD" method="_on_quit_pressed"]
+[connection signal="pressed" from="HUD/MarginContainer/HBoxContainer/Control/Button" to="HUD" method="_on_quit_pressed"]

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Starter Kit 3D Platformer"
-config/tags=PackedStringArray("starterkit")
+config/tags=PackedStringArray("network", "starterkit")
 run/main_scene="uid://fes1ep4xt1q8"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/bg_color=Color(0.92549, 0.92549, 0.960784, 1)

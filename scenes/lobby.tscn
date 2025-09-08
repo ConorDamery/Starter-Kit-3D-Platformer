@@ -1,134 +1,201 @@
-[gd_scene load_steps=2 format=3 uid="uid://fes1ep4xt1q8"]
+[gd_scene load_steps=3 format=3 uid="uid://fes1ep4xt1q8"]
 
+[ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="1_5gu6x"]
 [ext_resource type="Script" uid="uid://bu4vrgbgutdi1" path="res://scripts/lobby.gd" id="1_o1atq"]
 
-[node name="Lobby" type="VBoxContainer" node_paths=PackedStringArray("player_name_le", "connect_panel", "players_panel", "lobby_name_le", "lobby_addr_le", "enet_host_btn", "enet_join_btn", "enet_start_btn", "enet_lobby_list", "enet_player_list", "error_dialog")]
+[node name="Lobby" type="PanelContainer" node_paths=PackedStringArray("player_name_le", "connect_panel", "players_panel", "lobby_name_le", "lobby_addr_le", "host_btn", "join_btn", "start_btn", "add_btn", "lobby_list", "player_list", "map_label", "map_selection", "error_dialog")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_5gu6x")
 script = ExtResource("1_o1atq")
-player_name_le = NodePath("PlayerName")
-connect_panel = NodePath("Connect")
-players_panel = NodePath("Players")
-lobby_name_le = NodePath("Connect/MarginContainer/HBoxContainer/Settings/LobbyName")
-lobby_addr_le = NodePath("Connect/MarginContainer/HBoxContainer/Settings/LobbyAddr")
-enet_host_btn = NodePath("Connect/MarginContainer/HBoxContainer/Settings/Host")
-enet_join_btn = NodePath("Connect/MarginContainer/HBoxContainer/Settings/Join")
-enet_start_btn = NodePath("Players/MarginContainer/HBoxContainer/Settings/Start")
-enet_lobby_list = NodePath("Connect/MarginContainer/HBoxContainer/LobbyList/List")
-enet_player_list = NodePath("Players/MarginContainer/HBoxContainer/PlayerList/List")
-error_dialog = NodePath("ErrorDialog")
+player_name_le = NodePath("VBoxContainer/PlayerName")
+connect_panel = NodePath("VBoxContainer/Connect")
+players_panel = NodePath("VBoxContainer/Players")
+lobby_name_le = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyName")
+lobby_addr_le = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyAddr")
+host_btn = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Host")
+join_btn = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Join")
+start_btn = NodePath("VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/Start")
+add_btn = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/AddLobby")
+lobby_list = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/MarginContainer/LobbyList/List")
+player_list = NodePath("VBoxContainer/Players/MarginContainer/HBoxContainer/MarginContainer/PlayerList/List")
+map_label = NodePath("VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/Label")
+map_selection = NodePath("VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/OptionButton")
+error_dialog = NodePath("VBoxContainer/ErrorDialog")
 
-[node name="PlayerNameLabel" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="PlayerNameLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
 text = "Player Name:"
 
-[node name="PlayerName" type="LineEdit" parent="."]
+[node name="PlayerName" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
-text = "PlayerName"
+theme = ExtResource("1_5gu6x")
+text = "Player"
 
-[node name="Connect" type="PanelContainer" parent="."]
+[node name="Connect" type="PanelContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_5gu6x")
 
-[node name="MarginContainer" type="MarginContainer" parent="Connect"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Connect"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Connect/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Connect/MarginContainer"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 
-[node name="Settings" type="VBoxContainer" parent="Connect/MarginContainer/HBoxContainer"]
+[node name="Settings" type="VBoxContainer" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 theme_override_constants/separation = 10
 
-[node name="LobbyName" type="LineEdit" parent="Connect/MarginContainer/HBoxContainer/Settings"]
+[node name="LobbyName" type="LineEdit" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 placeholder_text = "Lobby Name"
 
-[node name="Host" type="Button" parent="Connect/MarginContainer/HBoxContainer/Settings"]
+[node name="Host" type="Button" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 disabled = true
 text = "Host"
 
-[node name="LobbyAddr" type="LineEdit" parent="Connect/MarginContainer/HBoxContainer/Settings"]
+[node name="Join" type="Button" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
-
-[node name="Join" type="Button" parent="Connect/MarginContainer/HBoxContainer/Settings"]
-layout_mode = 2
+theme = ExtResource("1_5gu6x")
 disabled = true
 text = "Join"
 
-[node name="Refresh" type="Button" parent="Connect/MarginContainer/HBoxContainer/Settings"]
+[node name="Refresh" type="Button" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 text = "Refresh"
 
-[node name="LobbyList" type="VBoxContainer" parent="Connect/MarginContainer/HBoxContainer"]
+[node name="LobbyAddr" type="LineEdit" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
+placeholder_text = "127.0.0.1:8000"
+
+[node name="AddLobby" type="Button" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings"]
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
+disabled = true
+text = "Add"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="Connect/MarginContainer/HBoxContainer/LobbyList"]
+[node name="LobbyList" type="VBoxContainer" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
+
+[node name="Label" type="Label" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/MarginContainer/LobbyList"]
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
 text = "Lobbies:"
 
-[node name="List" type="ItemList" parent="Connect/MarginContainer/HBoxContainer/LobbyList"]
+[node name="List" type="ItemList" parent="VBoxContainer/Connect/MarginContainer/HBoxContainer/MarginContainer/LobbyList"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_5gu6x")
 
-[node name="Players" type="PanelContainer" parent="."]
+[node name="Players" type="PanelContainer" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_5gu6x")
 
-[node name="MarginContainer" type="MarginContainer" parent="Players"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Players"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Players/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Players/MarginContainer"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 
-[node name="Settings" type="VBoxContainer" parent="Players/MarginContainer/HBoxContainer"]
+[node name="Settings" type="VBoxContainer" parent="VBoxContainer/Players/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 theme_override_constants/separation = 10
 
-[node name="Start" type="Button" parent="Players/MarginContainer/HBoxContainer/Settings"]
+[node name="Start" type="Button" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 disabled = true
 text = "Start"
 
-[node name="Quit" type="Button" parent="Players/MarginContainer/HBoxContainer/Settings"]
+[node name="Quit" type="Button" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
 text = "Quit"
 
-[node name="PlayerList" type="VBoxContainer" parent="Players/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
+text = "Map:"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Players/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="Players/MarginContainer/HBoxContainer/PlayerList"]
+[node name="PlayerList" type="VBoxContainer" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
+theme = ExtResource("1_5gu6x")
+
+[node name="Label" type="Label" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/MarginContainer/PlayerList"]
+layout_mode = 2
+theme = ExtResource("1_5gu6x")
 text = "Players:"
 
-[node name="List" type="ItemList" parent="Players/MarginContainer/HBoxContainer/PlayerList"]
+[node name="List" type="ItemList" parent="VBoxContainer/Players/MarginContainer/HBoxContainer/MarginContainer/PlayerList"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_5gu6x")
 
-[node name="ErrorDialog" type="AcceptDialog" parent="."]
+[node name="ErrorDialog" type="AcceptDialog" parent="VBoxContainer"]
+theme = ExtResource("1_5gu6x")
 
-[connection signal="text_changed" from="Connect/MarginContainer/HBoxContainer/Settings/LobbyName" to="." method="_on_lobby_name_changed"]
-[connection signal="pressed" from="Connect/MarginContainer/HBoxContainer/Settings/Host" to="." method="_on_enet_host_pressed"]
-[connection signal="text_changed" from="Connect/MarginContainer/HBoxContainer/Settings/LobbyAddr" to="." method="_on_lobby_addr_changed"]
-[connection signal="pressed" from="Connect/MarginContainer/HBoxContainer/Settings/Join" to="." method="_on_enet_join_pressed"]
-[connection signal="pressed" from="Connect/MarginContainer/HBoxContainer/Settings/Refresh" to="." method="_on_refresh_pressed"]
-[connection signal="pressed" from="Players/MarginContainer/HBoxContainer/Settings/Start" to="." method="_on_enet_start_pressed"]
-[connection signal="pressed" from="Players/MarginContainer/HBoxContainer/Settings/Quit" to="." method="_on_enet_quit_pressed"]
+[connection signal="text_changed" from="VBoxContainer/PlayerName" to="." method="_on_player_name_changed"]
+[connection signal="text_changed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyName" to="." method="_on_lobby_name_changed"]
+[connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Refresh" to="." method="_on_refresh_pressed"]
+[connection signal="text_changed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyAddr" to="." method="_on_lobby_addr_changed"]
+[connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/AddLobby" to="." method="_on_add_lobby_pressed"]
+[connection signal="pressed" from="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/Quit" to="." method="_on_quit_pressed"]
+[connection signal="item_selected" from="VBoxContainer/Players/MarginContainer/HBoxContainer/Settings/OptionButton" to="." method="_on_map_selected"]
