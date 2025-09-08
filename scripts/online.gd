@@ -77,8 +77,8 @@ func poll_events():
 func create_host(new_player_name: String, new_lobby_name: String):
 	lan_create_host(new_player_name, new_lobby_name)
 
-func create_client(new_player_name: String, lobby_id: int):
-	lan_create_client(new_player_name, lobby_id)
+func create_client(new_player_name: String, new_lobby_id: int):
+	lan_create_client(new_player_name, new_lobby_id)
 
 func request_lobbies():
 	lan_request_lobbies()
@@ -97,6 +97,8 @@ func start_game():
 		session.spawn_player(peer_id)
 
 func end_game():
+	Game.reset()
+	
 	close_connection()
 	
 	session.reset()
@@ -137,7 +139,7 @@ func unregister_player(id):
 #endregion
 
 #region Steam Backend
-
+# TODO: Implement this
 #endregion
 
 #region LAN Backend
@@ -196,11 +198,11 @@ func lan_create_host(new_player_name: String, new_lobby_name: String):
 	
 	is_host = true
 
-func lan_create_client(new_player_name: String, lobby_id: int):
-	if not lobbies.has(lobby_id):
+func lan_create_client(new_player_name: String, new_lobby_id: int):
+	if not lobbies.has(new_lobby_id):
 		return
 	
-	var lby_info = lobbies[lobby_id]
+	var lby_info = lobbies[new_lobby_id]
 	var addr = lby_info["addr"]
 	var port = lby_info["port"]
 	

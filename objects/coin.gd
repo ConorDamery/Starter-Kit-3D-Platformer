@@ -9,14 +9,16 @@ func _on_body_entered(body):
 	if not is_multiplayer_authority():
 		return
 	
-	if body.has_method("collect_coin") and !grabbed:
-		body.collect_coin()
-		Audio.play.rpc("res://sounds/coin.ogg") # Play sound
-		
-		self.queue_free() # De-spawn
-		$Particles.emitting = false # Stop emitting stars
-		
-		grabbed = true
+	if not (body is Player):
+		return
+	
+	Game.collect_coin.rpc(1)
+	Audio.play.rpc("res://sounds/coin.ogg") # Play sound
+	
+	self.queue_free() # De-spawn
+	$Particles.emitting = false # Stop emitting stars
+	
+	grabbed = true
 
 # Rotating, animating up and down
 

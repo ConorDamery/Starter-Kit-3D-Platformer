@@ -1,6 +1,5 @@
+class_name Player
 extends CharacterBody3D
-
-signal coin_collected
 
 @export_subgroup("Properties")
 @export var movement_speed = 250
@@ -16,8 +15,6 @@ var previously_floored = false
 
 var jump_single = true
 var jump_double = true
-
-var coins = 0
 
 @onready var particles_trail = $ParticlesTrail
 @onready var sound_footsteps = $SoundFootsteps
@@ -153,9 +150,3 @@ func jump():
 		jump_double = true;
 	else:
 		jump_double = false;
-
-# Collecting coins
-
-func collect_coin():
-	coins += 1
-	coin_collected.emit(coins)
