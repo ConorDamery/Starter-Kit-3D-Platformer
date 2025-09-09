@@ -26,6 +26,9 @@ var _lobby_list: Dictionary
 var _lobby_selected := -1
 
 func _ready() -> void:
+	player_name_le.text = Online.player_name
+	player_name_le.editable = Online.online_backend != Online.OnlineBackend.STEAM
+	player_name_le.text_changed.emit(player_name_le.text)
 	
 	Online.connection_failed.connect(self._on_connection_failed)
 	Online.connection_succeded.connect(self._on_connection_succeded)
@@ -142,6 +145,7 @@ func _on_add_lobby_pressed() -> void:
 	var lby_port = int(parts[1])
 	var lby_id = multiplayer.multiplayer_peer.generate_unique_id()
 	Online.lan_add_lobby(lby_id, lby_addr, lby_port, "Temp Lobby", 0, 0)
+	Online.lobby_list_changed.emit()
 
 func _on_map_selected(index: int) -> void:
 	Online.lobby_map = _map_list[index]

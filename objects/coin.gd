@@ -1,7 +1,6 @@
 extends Area3D
 
 var time := 0.0
-var grabbed := false
 
 # Collecting coins
 
@@ -17,8 +16,6 @@ func _on_body_entered(body):
 	
 	self.queue_free() # De-spawn
 	$Particles.emitting = false # Stop emitting stars
-	
-	grabbed = true
 
 # Rotating, animating up and down
 

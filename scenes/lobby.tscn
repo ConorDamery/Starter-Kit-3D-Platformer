@@ -37,7 +37,6 @@ text = "Player Name:"
 [node name="PlayerName" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_5gu6x")
-text = "Player"
 
 [node name="Connect" type="PanelContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(600, 0)
