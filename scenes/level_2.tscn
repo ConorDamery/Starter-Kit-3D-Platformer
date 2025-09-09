@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c47o7mkme00vf"]
+[gd_scene load_steps=12 format=3 uid="uid://c47o7mkme00vf"]
 
 [ext_resource type="Environment" uid="uid://bqnqgflivjvue" path="res://scenes/main-environment.tres" id="1_172wr"]
 [ext_resource type="PackedScene" uid="uid://cnymdajj1vsqm" path="res://objects/platform.tscn" id="2_g2hoc"]
@@ -11,13 +11,6 @@
 [ext_resource type="Script" uid="uid://cx4jgntsc1tg6" path="res://scripts/hud.gd" id="9_k22d5"]
 [ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="10_k6a82"]
 [ext_resource type="Texture2D" uid="uid://cd7oyc56ehkx1" path="res://sprites/coin.png" id="11_1sb0y"]
-[ext_resource type="FontFile" uid="uid://d0cxd77jybrcn" path="res://fonts/lilita_one_regular.ttf" id="12_vhnap"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_38ys3"]
-font = ExtResource("12_vhnap")
-font_size = 48
-shadow_color = Color(0, 0, 0, 0.376471)
-shadow_offset = Vector2(2, 2)
 
 [node name="Main" type="Node3D"]
 
@@ -187,13 +180,11 @@ texture = ExtResource("11_1sb0y")
 layout_mode = 2
 theme = ExtResource("10_k6a82")
 text = "×"
-label_settings = SubResource("LabelSettings_38ys3")
 
 [node name="Coins" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("10_k6a82")
 text = "0"
-label_settings = SubResource("LabelSettings_38ys3")
 
 [node name="Control" type="Control" parent="HUD/MarginContainer/HBoxContainer"]
 layout_mode = 2

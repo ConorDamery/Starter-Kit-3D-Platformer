@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_5gu6x")
 script = ExtResource("1_o1atq")
-player_name_le = NodePath("VBoxContainer/PlayerName")
+player_name_le = NodePath("VBoxContainer/HBoxContainer/PlayerName")
 connect_panel = NodePath("VBoxContainer/Connect")
 players_panel = NodePath("VBoxContainer/Players")
 lobby_name_le = NodePath("VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyName")
@@ -29,13 +29,17 @@ error_dialog = NodePath("VBoxContainer/ErrorDialog")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="PlayerNameLabel" type="Label" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PlayerNameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_5gu6x")
 text = "Player Name:"
 
-[node name="PlayerName" type="LineEdit" parent="VBoxContainer"]
+[node name="PlayerName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("1_5gu6x")
 
 [node name="Connect" type="PanelContainer" parent="VBoxContainer"]
@@ -188,7 +192,7 @@ theme = ExtResource("1_5gu6x")
 [node name="ErrorDialog" type="AcceptDialog" parent="VBoxContainer"]
 theme = ExtResource("1_5gu6x")
 
-[connection signal="text_changed" from="VBoxContainer/PlayerName" to="." method="_on_player_name_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/PlayerName" to="." method="_on_player_name_changed"]
 [connection signal="text_changed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/LobbyName" to="." method="_on_lobby_name_changed"]
 [connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="VBoxContainer/Connect/MarginContainer/HBoxContainer/Settings/Join" to="." method="_on_join_pressed"]
