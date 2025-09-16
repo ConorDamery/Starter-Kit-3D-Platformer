@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MapConfig" load_steps=4 format=3 uid="uid://duqmluaidkfha"]
+
+[ext_resource type="Script" uid="uid://bea2scleqlklj" path="res://online/map_config.gd" id="1_7ayby"]
+[ext_resource type="PackedScene" uid="uid://c47o7mkme00vf" path="res://scenes/level_2.tscn" id="1_soica"]
+[ext_resource type="PackedScene" uid="uid://dl2ed4gkybggf" path="res://objects/player.tscn" id="2_j8uag"]
+
+[resource]
+script = ExtResource("1_7ayby")
+map_scene = ExtResource("1_soica")
+player_scene = ExtResource("2_j8uag")
+metadata/_custom_type_script = "uid://bea2scleqlklj"

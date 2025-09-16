@@ -23,20 +23,20 @@ var jump_double = true
 
 # RPC Calls
 
-@rpc("authority", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func set_authority(id : int) -> void:
 	set_multiplayer_authority(id)
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func teleport(new_position : Vector3) -> void:
 	self.position = new_position
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func setup_view() -> void:
 	if is_multiplayer_authority():
 		view = load("res://objects/view.tscn").instantiate()
 		view.target = self
-		Online.session.session_map.add_child(view)
+		Online.session.map_scene.add_child(view)
 
 # Functions
 

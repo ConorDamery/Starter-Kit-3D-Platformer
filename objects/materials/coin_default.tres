@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://g66epblh6i7m"]
+
+[ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://models/Textures/colormap.png" id="1_rvfis"]
+
+[resource]
+albedo_texture = ExtResource("1_rvfis")
+rim_enabled = true
+rim = 0.5

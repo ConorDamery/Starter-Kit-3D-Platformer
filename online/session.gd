@@ -1,44 +1,55 @@
-extends Node3D
+extends Node
 class_name Session
 
 @export var config: SessionConfig
 
-var session_map: Node3D
+var map_config: MapConfig
+var map_scene: Node
 var spawned_players := {}
 
 func _ready() -> void:
 	Online.session = self
+	
+	# Setup our auto spawn list based on config
+	for res in config.player_spawn_list:
+		$PlayerSpawner.add_spawnable_scene(res.resource_path)
+		
+	for res in config.dynamic_spawn_list:
+		$DynamicSpawner.add_spawnable_scene(res.resource_path)
 
 func is_game_in_progress():
-	return session_map != null
+	return map_scene != null
 
-func load_map(map: String):
-	# Change scene.
-	session_map = config.game_maps[map].instantiate()
-	if not session_map:
-		push_error("Failed to load session map: %s" % map)
+func load_map(map_name: String):
+	if !config.maps.has(map_name):
+		push_error("Cannot find map: %s" % map_name)
 		return
 	
-	self.add_child(session_map)
+	map_config = config.maps[map_name]
+	
+	# Change scene.
+	map_scene = map_config.map_scene.instantiate()
+	if not map_scene:
+		push_error("Failed to load session map: %s" % map_name)
+		return
+	
+	self.add_child(map_scene, true)
 	
 	if multiplayer.is_server():
-		for child in session_map.world_dynamic.get_children():
+		# Copy dynamic objects
+		for child in map_scene.world_dynamic.get_children():
 			# Duplicate the node as instance so we keep it as original as possible and add it to session
 			var dup = child.duplicate(DuplicateFlags.DUPLICATE_USE_INSTANTIATION)
-			$Dynamic.add_child(dup)
+			$Dynamic.add_child(dup, true)
 	
 	# Always delete the dynamic objects from loaded scene (they will be replicated)
-	session_map.world_dynamic.queue_free()
+	map_scene.world_dynamic.queue_free()
 
 func spawn_player(id: int) -> Node:
 	assert(multiplayer.is_server())
 	
 	# Instantiate player and add it to our bookkeeping list
-	var player_scene = session_map.override_player_scene
-	if player_scene == null:
-		player_scene = config.default_player_scene
-	
-	var player: Node = player_scene.instantiate()
+	var player: Node = map_config.player_scene.instantiate()
 	spawned_players[id] = player
 	
 	# "true" forces a readable name, which is important, as we can't have sibling nodes
@@ -62,6 +73,7 @@ func reset():
 	
 	spawned_players.clear()
 	
-	if session_map:
-		session_map.queue_free()
-		session_map = null
+	map_config = null
+	if map_scene:
+		map_scene.queue_free()
+		map_scene = null

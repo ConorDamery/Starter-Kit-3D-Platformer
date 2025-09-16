@@ -2,5 +2,8 @@ extends Resource
 class_name SessionConfig
 
 @export_subgroup("Properties")
-@export var default_player_scene: PackedScene
-@export var game_maps: Dictionary[String, PackedScene]
+@export var maps: Dictionary[String, MapConfig]
+
+@export_subgroup("Auto Spawn List")
+@export var player_spawn_list: Array[Resource]
+@export var dynamic_spawn_list: Array[Resource]

@@ -1,19 +1,25 @@
-[gd_scene load_steps=16 format=3 uid="uid://bqqgyqafm7xwp"]
+[gd_scene load_steps=17 format=3 uid="uid://bqqgyqafm7xwp"]
 
-[ext_resource type="Script" uid="uid://b3irow6pqdov2" path="res://scripts/state.gd" id="1_7gny6"]
+[ext_resource type="Script" uid="uid://b3irow6pqdov2" path="res://scripts/game_map.gd" id="1_7gny6"]
 [ext_resource type="Environment" uid="uid://bqnqgflivjvue" path="res://scenes/main-environment.tres" id="1_ahusb"]
 [ext_resource type="PackedScene" uid="uid://cnymdajj1vsqm" path="res://objects/platform.tscn" id="6_sdmev"]
 [ext_resource type="PackedScene" uid="uid://rjh4ifidqrfp" path="res://objects/platform_medium.tscn" id="7_ixpj3"]
 [ext_resource type="PackedScene" uid="uid://uqr4hswv6d2g" path="res://objects/platform_grass_large_round.tscn" id="8_4oh1e"]
+[ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://models/Textures/colormap.png" id="9_2aecg"]
 [ext_resource type="PackedScene" uid="uid://c8up71en5djgm" path="res://objects/platform_falling.tscn" id="9_2fnpo"]
 [ext_resource type="PackedScene" uid="uid://dtjvjdjl8cs6e" path="res://models/flag.glb" id="9_fw1f5"]
 [ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="10_eb6dy"]
-[ext_resource type="PackedScene" uid="uid://dfpisimsgf5ce" path="res://objects/coin_default.tscn" id="10_fwhys"]
+[ext_resource type="PackedScene" uid="uid://dfpisimsgf5ce" path="res://objects/coin.tscn" id="10_fwhys"]
 [ext_resource type="Script" uid="uid://cx4jgntsc1tg6" path="res://scripts/hud.gd" id="11_apvpm"]
 [ext_resource type="PackedScene" uid="uid://dy017k58p20sk" path="res://objects/cloud.tscn" id="13_drtpy"]
 [ext_resource type="Texture2D" uid="uid://cd7oyc56ehkx1" path="res://sprites/coin.png" id="13_jfda3"]
-[ext_resource type="PackedScene" uid="uid://clu4ktrel15sf" path="res://objects/coin_red.tscn" id="14_2aecg"]
 [ext_resource type="FontFile" uid="uid://d0cxd77jybrcn" path="res://fonts/lilita_one_regular.ttf" id="17_tk810"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dial"]
+albedo_color = Color(1, 0.627451, 1, 1)
+albedo_texture = ExtResource("9_2aecg")
+rim_enabled = true
+rim = 0.5
 
 [sub_resource type="LabelSettings" id="LabelSettings_38ys3"]
 font = ExtResource("17_tk810")
@@ -86,37 +92,39 @@ transform = Transform3D(1.56209, -1.37982, 1.71508, 1.97375, 1.80907, -0.342241,
 [node name="Dynamic" type="Node3D" parent="World"]
 
 [node name="coin" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.91867, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.635, 0)
 
 [node name="coin10" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.91867, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.635, 4)
 
 [node name="coin2" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 2.25372, -0.33003)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 1.97005, -0.33003)
 
 [node name="coin3" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 2.25372, -1.33003)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 1.97005, -1.33003)
+
+[node name="coin11" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.0176, 2.65793, 3.3603)
+surface_material_override/0 = SubResource("StandardMaterial3D_6dial")
+coin_value = 5
 
 [node name="coin5" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7731, 2.83308, -2.28223)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7731, 2.54941, -2.28223)
 
 [node name="coin6" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.8111, 1.97247, 0.328574)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.8111, 1.6888, 0.328574)
 
 [node name="coin7" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.8111, 2.97247, 0.328574)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.8111, 2.6888, 0.328574)
 
 [node name="coin8" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.9647, 1.08551, 3.99354)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.9647, 0.801836, 3.99354)
 
 [node name="coin9" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.28367, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -6)
 
 [node name="coin4" parent="World/Dynamic" instance=ExtResource("10_fwhys")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 2.25372, -2.33003)
-
-[node name="coin11" parent="World/Dynamic" instance=ExtResource("14_2aecg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.0176, 2.9416, 3.3603)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0437, 1.97005, -2.33003)
 
 [node name="platform-falling" parent="World/Dynamic" instance=ExtResource("9_2fnpo")]
 transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -9, 0.419294, 4)

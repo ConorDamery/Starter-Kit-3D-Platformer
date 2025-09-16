@@ -8,7 +8,7 @@ var bus = "master"
 var available = []  # The available players.
 var queue = []  # The queue of sounds to play.
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func play(sound_path):
 	queue.append(sound_path)
 

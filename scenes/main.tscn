@@ -6,7 +6,7 @@
 
 [node name="Main" type="Node"]
 
-[node name="Lobby" parent="." instance=ExtResource("1_sugp2")]
-
 [node name="Session" parent="." instance=ExtResource("2_jyhfs")]
 config = ExtResource("3_tbgi4")
+
+[node name="Lobby" parent="." instance=ExtResource("1_sugp2")]

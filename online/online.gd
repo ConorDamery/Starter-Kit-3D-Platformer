@@ -113,8 +113,10 @@ func close_connection():
 			#steam_close_connection()
 			pass
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func load_map(map: String):
+	get_tree().set_pause(true)
+	
 	session.load_map(map)
 	
 	get_tree().set_pause(false) # Unpause and unleash the game!
@@ -143,7 +145,7 @@ func end_game():
 
 # RPC Functions
 
-@rpc("call_local", "any_peer")
+@rpc("call_local", "any_peer", "reliable")
 func register_player(new_player_name: String):
 	var id = multiplayer.get_remote_sender_id()
 	var unique_name = _make_unique_name(new_player_name)
@@ -155,7 +157,7 @@ func register_player(new_player_name: String):
 		var player = session.spawn_player(id)
 		player_spawned.emit(player, id)
 
-@rpc("call_local", "any_peer")
+@rpc("call_local", "any_peer", "reliable")
 func unregister_player(id):
 	if session.is_game_in_progress():
 		#game_error.emit("Player " + players[id] + " disconnected!")

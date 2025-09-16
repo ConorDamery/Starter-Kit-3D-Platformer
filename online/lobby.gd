@@ -26,6 +26,8 @@ var _lobby_list: Dictionary
 var _lobby_selected := -1
 
 func _ready():
+	# The order of the scenes dictates the ready sequence
+	# So we'll defer our ready to make sure session has been initialized
 	call_deferred("_late_ready")
 
 func _late_ready():
@@ -45,7 +47,7 @@ func _late_ready():
 	lobby_list.item_selected.connect(self._on_lobby_selected)
 	
 	var idx = 0
-	for map_name in Online.session.config.game_maps.keys():
+	for map_name in Online.session.config.maps.keys():
 		map_selection.add_item(map_name)
 		_map_list[idx] = map_name
 		idx += 1

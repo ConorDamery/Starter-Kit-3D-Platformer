@@ -1,14 +1,15 @@
 [gd_scene load_steps=14 format=4 uid="uid://dfpisimsgf5ce"]
 
-[ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://models/Textures/colormap.png" id="2_04qt4"]
-[ext_resource type="Script" uid="uid://bllf6owndebm1" path="res://objects/coin.gd" id="2_gaakh"]
-[ext_resource type="Texture2D" uid="uid://bs6puxrivhkk2" path="res://sprites/particle.png" id="3_xl1k0"]
+[ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://models/Textures/colormap.png" id="1_ruuym"]
+[ext_resource type="Material" uid="uid://g66epblh6i7m" path="res://objects/materials/coin_default.tres" id="2_r56ra"]
+[ext_resource type="Script" uid="uid://bllf6owndebm1" path="res://objects/coin.gd" id="3_sivq3"]
+[ext_resource type="Texture2D" uid="uid://bs6puxrivhkk2" path="res://sprites/particle.png" id="4_porvh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ct61v"]
 resource_name = "colormap"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("2_04qt4")
+albedo_texture = ExtResource("1_ruuym")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_wqkpw"]
 _surfaces = [{
@@ -44,17 +45,12 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_wqkpw")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xkafy"]
-albedo_texture = ExtResource("2_04qt4")
-rim_enabled = true
-rim = 0.5
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_bnkeq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6hm51"]
 transparency = 1
 vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("3_xl1k0")
+albedo_texture = ExtResource("4_porvh")
 billboard_mode = 1
 billboard_keep_scale = true
 proximity_fade_enabled = true
@@ -69,26 +65,26 @@ point_count = 3
 colors = PackedColorArray(0.996094, 0.910156, 0.351563, 1, 1, 1, 1, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1o7s2"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath("..:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
+properties/1/path = NodePath("..:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:scale")
+properties/2/path = NodePath("..:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="coin" type="Area3D"]
-script = ExtResource("2_gaakh")
-
-[node name="Mesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+[node name="Coin" type="MeshInstance3D"]
 mesh = SubResource("ArrayMesh_t08aw")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_xkafy")
+surface_material_override/0 = ExtResource("2_r56ra")
+script = ExtResource("3_sivq3")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("SphereShape3D_bnkeq")
 
@@ -108,6 +104,7 @@ scale_amount_curve = SubResource("Curve_6a7l3")
 color_ramp = SubResource("Gradient_7tsk2")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../Area3D")
 replication_config = SubResource("SceneReplicationConfig_1o7s2")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_body_entered"]

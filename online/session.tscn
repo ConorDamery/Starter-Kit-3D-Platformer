@@ -2,17 +2,15 @@
 
 [ext_resource type="Script" uid="uid://c6nfjx3wo71bb" path="res://online/session.gd" id="1_bxqfd"]
 
-[node name="Session" type="Node3D"]
+[node name="Session" type="Node"]
 script = ExtResource("1_bxqfd")
 
+[node name="Players" type="Node" parent="."]
+
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://dl2ed4gkybggf")
 spawn_path = NodePath("../Players")
 
-[node name="Players" type="Node3D" parent="."]
+[node name="Dynamic" type="Node" parent="."]
 
 [node name="DynamicSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://dfpisimsgf5ce", "uid://c8up71en5djgm")
 spawn_path = NodePath("../Dynamic")
-
-[node name="Dynamic" type="Node3D" parent="."]

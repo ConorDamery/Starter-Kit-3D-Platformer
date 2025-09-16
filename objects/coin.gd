@@ -1,17 +1,16 @@
-extends Area3D
+extends Node3D
+
+@export var coin_value := 1
 
 var time := 0.0
 
 # Collecting coins
 
 func _on_body_entered(body):
-	if not is_multiplayer_authority():
+	if !is_multiplayer_authority() or !(body is Player):
 		return
 	
-	if not (body is Player):
-		return
-	
-	Game.collect_coin.rpc(1)
+	Online.session.map_scene.collect_coin.rpc(coin_value)
 	Audio.play.rpc("res://sounds/coin.ogg") # Play sound
 	
 	self.queue_free() # De-spawn
@@ -20,7 +19,7 @@ func _on_body_entered(body):
 # Rotating, animating up and down
 
 func _process(delta):
-	if not is_multiplayer_authority():
+	if !is_multiplayer_authority():
 		return
 	
 	rotate_y(2 * delta) # Rotation
