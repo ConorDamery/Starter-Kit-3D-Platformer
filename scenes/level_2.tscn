@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://c47o7mkme00vf"]
+[gd_scene load_steps=13 format=3 uid="uid://c47o7mkme00vf"]
 
 [ext_resource type="Environment" uid="uid://bqnqgflivjvue" path="res://scenes/main-environment.tres" id="1_172wr"]
+[ext_resource type="Script" uid="uid://bxbrebwgiyskh" path="res://online/session_map.gd" id="1_g2hoc"]
 [ext_resource type="PackedScene" uid="uid://cnymdajj1vsqm" path="res://objects/platform.tscn" id="2_g2hoc"]
 [ext_resource type="PackedScene" uid="uid://rjh4ifidqrfp" path="res://objects/platform_medium.tscn" id="3_fldb1"]
 [ext_resource type="PackedScene" uid="uid://uqr4hswv6d2g" path="res://objects/platform_grass_large_round.tscn" id="4_guvtl"]
@@ -12,7 +13,9 @@
 [ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="10_k6a82"]
 [ext_resource type="Texture2D" uid="uid://cd7oyc56ehkx1" path="res://sprites/coin.png" id="11_1sb0y"]
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("world_dynamic")]
+script = ExtResource("1_g2hoc")
+world_dynamic = NodePath("World/Dynamic")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = ExtResource("1_172wr")

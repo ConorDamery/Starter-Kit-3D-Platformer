@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SessionConfig" load_steps=5 format=3 uid="uid://d4iib8476kmqi"]
+
+[ext_resource type="Script" uid="uid://ctgwqh45p4gm5" path="res://online/session_config.gd" id="1_aqig5"]
+[ext_resource type="PackedScene" uid="uid://bqqgyqafm7xwp" path="res://scenes/level_1.tscn" id="1_bo8lq"]
+[ext_resource type="PackedScene" uid="uid://dl2ed4gkybggf" path="res://objects/player.tscn" id="1_ua174"]
+[ext_resource type="PackedScene" uid="uid://c47o7mkme00vf" path="res://scenes/level_2.tscn" id="2_fxb8g"]
+
+[resource]
+script = ExtResource("1_aqig5")
+default_player_scene = ExtResource("1_ua174")
+game_maps = Dictionary[String, PackedScene]({
+"Level 1": ExtResource("1_bo8lq"),
+"Level 2": ExtResource("2_fxb8g")
+})
+metadata/_custom_type_script = "uid://ctgwqh45p4gm5"

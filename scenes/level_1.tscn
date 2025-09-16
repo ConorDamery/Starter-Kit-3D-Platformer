@@ -1,5 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://bqqgyqafm7xwp"]
+[gd_scene load_steps=15 format=3 uid="uid://bqqgyqafm7xwp"]
 
+[ext_resource type="Script" uid="uid://bxbrebwgiyskh" path="res://online/session_map.gd" id="1_7gny6"]
 [ext_resource type="Environment" uid="uid://bqnqgflivjvue" path="res://scenes/main-environment.tres" id="1_ahusb"]
 [ext_resource type="PackedScene" uid="uid://cnymdajj1vsqm" path="res://objects/platform.tscn" id="6_sdmev"]
 [ext_resource type="PackedScene" uid="uid://rjh4ifidqrfp" path="res://objects/platform_medium.tscn" id="7_ixpj3"]
@@ -19,7 +20,9 @@ font_size = 48
 shadow_color = Color(0, 0, 0, 0.376471)
 shadow_offset = Vector2(2, 2)
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("world_dynamic")]
+script = ExtResource("1_7gny6")
+world_dynamic = NodePath("World/Dynamic")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = ExtResource("1_ahusb")

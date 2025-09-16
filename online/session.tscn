@@ -1,11 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://baj8w0ra7h7mk"]
 
-[ext_resource type="Script" uid="uid://c6nfjx3wo71bb" path="res://scripts/session.gd" id="1_wfdo7"]
+[ext_resource type="Script" uid="uid://c6nfjx3wo71bb" path="res://online/session.gd" id="1_bxqfd"]
 
 [node name="Session" type="Node3D"]
-script = ExtResource("1_wfdo7")
-
-[node name="Views" type="Node3D" parent="."]
+script = ExtResource("1_bxqfd")
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://dl2ed4gkybggf")

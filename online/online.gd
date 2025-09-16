@@ -2,15 +2,10 @@ extends Node
 
 const MAX_PLAYERS = 8
 
-var game_maps := {
-	"Level 1": "res://scenes/level_1.tscn",
-	"Level 2": "res://scenes/level_2.tscn"
-	}
-
 enum OnlineBackend { LAN, STEAM }
-var online_backend = OnlineBackend.STEAM
+var online_backend = OnlineBackend.LAN
 
-var session: Node3D
+var session: Session
 var lobby_id := -1
 var lobby_name: String
 var lobby_map: String
@@ -18,7 +13,7 @@ var lobby_map: String
 var lobbies := {}
 var is_host := false
 
-var player_name: String
+var player_name: String = "Player"
 
 var players := {}
 var player_ready := {}
@@ -28,18 +23,17 @@ signal connection_succeded()
 signal lobby_list_changed()
 signal player_list_changed()
 signal game_started()
+signal player_spawned(player: Node, id: int)
+#signal player_despawned(node: Node, id: int) ??
 signal game_ended()
 signal game_error(what: String)
 signal game_log(what: String)
 
 func _ready():
-	session = load("res://scenes/session.tscn").instantiate()
-	get_tree().get_root().add_child.call_deferred(session)
-	
 	initialize_backend()
 	setup_callbacks()
 
-func _process(delta: float):
+func _process(_delta: float):
 	poll_events()
 
 #region Online API
@@ -119,22 +113,28 @@ func close_connection():
 			#steam_close_connection()
 			pass
 
+@rpc("any_peer", "call_local")
+func load_map(map: String):
+	session.load_map(map)
+	
+	get_tree().set_pause(false) # Unpause and unleash the game!
+	game_started.emit()
+
 func start_game():
 	assert(multiplayer.is_server())
 	
-	# Call load_world on all clients
-	session.load_world.rpc(game_maps[lobby_map])
+	# Call load_map on all clients
+	load_map.rpc(lobby_map)
 	
 	# Iterate over our connected peer ids
-	for peer_id in players:
-		session.spawn_player(peer_id)
+	for id in players:
+		var player = session.spawn_player(id)
+		player_spawned.emit(player, id)
 
 func end_game():
-	Game.reset()
+	session.reset()
 	
 	close_connection()
-	
-	session.reset()
 	
 	players.clear()
 	player_list_changed.emit()
@@ -151,13 +151,9 @@ func register_player(new_player_name: String):
 	player_list_changed.emit()
 	
 	if session.is_game_in_progress() and multiplayer.is_server():
-		# Sync authority peer ids for newely joined player
-		for peer_id in session.spawned_players.keys():
-			var player = session.spawned_players[peer_id]
-			player.set_authority.rpc_id(id, peer_id)
-		
-		session.load_world.rpc_id(id, game_maps[lobby_map])
-		session.spawn_player(id)
+		load_map.rpc_id(id, lobby_map)
+		var player = session.spawn_player(id)
+		player_spawned.emit(player, id)
 
 @rpc("call_local", "any_peer")
 func unregister_player(id):
@@ -308,8 +304,8 @@ func steam_request_lobbies():
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_CLOSE)
 	Steam.requestLobbyList()
 
-func steam_on_lobby_match_list(lobbies : Array):
-	for lby_id in lobbies:
+func steam_on_lobby_match_list(new_lobbies : Array):
+	for lby_id in new_lobbies:
 		var lby_name = Steam.getLobbyData(lby_id, "name")
 		var lby_max_players = int(Steam.getLobbyData(lby_id, "lobby_max_players"))
 		var lby_num_players = Steam.getNumLobbyMembers(lby_id)
@@ -331,6 +327,7 @@ func steam_add_lobby(lby_id: int, lby_name: String, lby_num_players: int, lby_ma
 
 const LAN_BROADCAST_ADDR := "255.255.255.255"
 const LAN_BROADCAST_PORT_RANGE = 65535
+const LAN_BROADCAST_PORT_BATCH = 1000
 
 var lan_broadcast_socket := PacketPeerUDP.new()
 var lan_broadcast_retries = 1
@@ -375,7 +372,7 @@ func lan_create_host(new_player_name: String, new_lobby_name: String):
 	
 	# Query the actual address & port the OS assigned
 	var lobby_port = peer.host.get_local_port()
-	game_log.emit("[LAN] Lobby create with ID: %d, on port: " % [lobby_id, lobby_port])
+	game_log.emit("[LAN] Lobby create with ID: %d, on port: %d" % [lobby_id, lobby_port])
 	
 	register_player.rpc_id(multiplayer.get_unique_id(), new_player_name)
 	player_name = players[multiplayer.get_unique_id()]
@@ -407,9 +404,20 @@ func lan_request_lobbies():
 	
 	for i in lan_broadcast_retries:
 		# Try all possible ports since we're using ephemeral ports (aka we don't know what port to use)
-		for port in LAN_BROADCAST_PORT_RANGE:
-			lan_broadcast_socket.set_dest_address(LAN_BROADCAST_ADDR, port)
-			lan_broadcast_socket.put_packet("LOBBY_QUERY".to_utf8_buffer())
+		var port = 0
+		while port <= LAN_BROADCAST_PORT_RANGE:
+			for t in LAN_BROADCAST_PORT_BATCH:
+				if port + t >= LAN_BROADCAST_PORT_RANGE:
+					break
+				
+				port += 1
+				lan_broadcast_socket.set_dest_address(LAN_BROADCAST_ADDR, port)
+				lan_broadcast_socket.put_packet("LOBBY_QUERY".to_utf8_buffer())
+			
+			# Yield to the engine for one frame so we don't block
+			await get_tree().process_frame
+			
+		# Wait a bit between retries
 		await get_tree().create_timer(lan_broadcast_delay).timeout
 	
 	game_log.emit("[LAN] Broadcasted lobby query")
@@ -434,7 +442,7 @@ func lan_handle_lobby_info(sender_ip: String, reply: String):
 	if lobbies.has(lby_id):
 		return
 		
-	game_log.emit("[LAN] Discovered lobby: ", reply, ", from: ", sender_ip)
+	game_log.emit("[LAN] Discovered lobby: %s, from: %s" % [reply, sender_ip])
 	
 	var lby_name = parts[2]
 	var lby_port = int(parts[3])

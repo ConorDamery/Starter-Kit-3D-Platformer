@@ -25,7 +25,10 @@ var _map_list: Dictionary
 var _lobby_list: Dictionary
 var _lobby_selected := -1
 
-func _ready() -> void:
+func _ready():
+	call_deferred("_late_ready")
+
+func _late_ready():
 	player_name_le.text = Online.player_name
 	player_name_le.editable = Online.online_backend != Online.OnlineBackend.STEAM
 	player_name_le.text_changed.emit(player_name_le.text)
@@ -42,7 +45,7 @@ func _ready() -> void:
 	lobby_list.item_selected.connect(self._on_lobby_selected)
 	
 	var idx = 0
-	for map_name in Online.game_maps.keys():
+	for map_name in Online.session.config.game_maps.keys():
 		map_selection.add_item(map_name)
 		_map_list[idx] = map_name
 		idx += 1
@@ -74,14 +77,15 @@ func _on_player_list_changed():
 		player_list.add_item(player_name if player_name != Online.player_name else player_name + " (you)")
 
 func _on_game_started():
-	get_tree().get_root().get_node("Lobby").hide()
+	self.hide()
 
 func _on_game_ended():
 	Online.request_lobbies()
 	
 	connect_panel.show()
 	players_panel.hide()
-	get_tree().get_root().get_node("Lobby").show()
+	start_btn.disabled = true
+	self.show()
 
 func _on_game_error(what: String):
 	error_dialog.dialog_text = what

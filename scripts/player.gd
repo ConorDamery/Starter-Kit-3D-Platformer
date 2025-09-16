@@ -34,7 +34,9 @@ func teleport(new_position : Vector3) -> void:
 @rpc("any_peer", "call_local")
 func setup_view() -> void:
 	if is_multiplayer_authority():
-		view = Online.session.create_view(self)
+		view = load("res://objects/view.tscn").instantiate()
+		view.target = self
+		Online.session.session_map.add_child(view)
 
 # Functions
 

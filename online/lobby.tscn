@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://fes1ep4xt1q8"]
 
 [ext_resource type="Theme" uid="uid://daao2vxvriv4o" path="res://fonts/theme.tres" id="1_5gu6x"]
-[ext_resource type="Script" uid="uid://bu4vrgbgutdi1" path="res://scripts/lobby.gd" id="1_o1atq"]
+[ext_resource type="Script" uid="uid://bu4vrgbgutdi1" path="res://online/lobby.gd" id="1_o1atq"]
 
 [node name="Lobby" type="PanelContainer" node_paths=PackedStringArray("player_name_le", "connect_panel", "players_panel", "lobby_name_le", "lobby_addr_le", "host_btn", "join_btn", "start_btn", "add_btn", "lobby_list", "player_list", "map_label", "map_selection", "error_dialog")]
 anchors_preset = 15
